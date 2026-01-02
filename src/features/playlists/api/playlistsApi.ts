@@ -14,7 +14,7 @@ export const playlistsApi = createApi({
       fetchPlaylists: build.query<PlaylistsResponse, FetchPlaylistsArgs | void>({
         query: () => {
           return {
-            url: 'playlists',
+            url: '/playlists',
           };
         },
       }),
