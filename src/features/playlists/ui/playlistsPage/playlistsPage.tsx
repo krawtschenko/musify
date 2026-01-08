@@ -1,9 +1,10 @@
-import { useFetchPlaylistsQuery } from '@/features/playlists/api/playlistsApi.ts';
 import s from './playlistsPage.module.scss';
-import { CreatePlaylistForm } from '@/features/playlists/ui/playlistsPage/createPlaylistForm/createPlaylistForm.tsx';
+import { CreatePlaylistForm } from './createPlaylistForm';
+import { useDeletePlaylistMutation, useFetchPlaylistsQuery } from '@/features/playlists/api';
 
 export const PlaylistsPage = () => {
   const { data } = useFetchPlaylistsQuery();
+  const [deletePlaylist] = useDeletePlaylistMutation();
 
   return (
     <div className={s.container}>
@@ -18,6 +19,7 @@ export const PlaylistsPage = () => {
               <div>title: {playlist.attributes.title}</div>
               <div>description: {playlist.attributes.description}</div>
               <div>userName: {playlist.attributes.user.name}</div>
+              <button onClick={() => deletePlaylist({ playlistId: playlist.id })}>DELETE</button>
             </div>
           );
         })}
