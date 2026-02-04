@@ -1,4 +1,3 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type {
   CreatePlaylistArgs,
   FetchPlaylistsArgs,
@@ -6,32 +5,26 @@ import type {
   PlaylistsResponse,
   UpdatePlaylistArgs,
 } from './playlistsApi.types.ts';
+import { baseApi } from '@/app/api/baseApi.ts';
 
-export const playlistsApi = createApi({
-  reducerPath: 'playlistsApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_BASE_URL,
-    headers: {
-      'API-KEY': import.meta.env.VITE_API_KEY,
-    },
-    prepareHeaders: (headers) => {
-      headers.set('Authorization', `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`);
-      return headers;
-    },
-  }),
+export const playlistsApi = baseApi.injectEndpoints({
   endpoints: (build) => {
     return {
       fetchPlaylists: build.query<PlaylistsResponse, FetchPlaylistsArgs | void>({
         query: () => '/playlists',
+        providesTags: ['Playlists'],
       }),
       createPlaylist: build.mutation<{ data: PlaylistData }, CreatePlaylistArgs>({
         query: (body) => ({ method: 'POST', url: '/playlists', body }),
+        invalidatesTags: ['Playlists'],
       }),
       deletePlaylist: build.mutation<void, { playlistId: string }>({
         query: ({ playlistId }) => ({ method: 'DELETE', url: `/playlists/${playlistId}` }),
+        invalidatesTags: ['Playlists'],
       }),
       updatePlaylist: build.mutation<void, { playlistId: string; body: UpdatePlaylistArgs }>({
         query: ({ playlistId, body }) => ({ method: 'PUT', url: `/playlists/${playlistId}`, body }),
+        invalidatesTags: ['Playlists'],
       }),
     };
   },
