@@ -6,6 +6,7 @@ import type {
   UpdatePlaylistArgs,
 } from './playlistsApi.types.ts';
 import { baseApi } from '@/app/api/baseApi.ts';
+import type { Images } from '@/common/types';
 
 export const playlistsApi = baseApi.injectEndpoints({
   endpoints: (build) => {
@@ -26,6 +27,15 @@ export const playlistsApi = baseApi.injectEndpoints({
         query: ({ playlistId, body }) => ({ method: 'PUT', url: `/playlists/${playlistId}`, body }),
         invalidatesTags: ['Playlists'],
       }),
+      uploadPlaylistCover: build.mutation<Images, { playlistId: string; file: File }>({
+        query: ({ playlistId, file }) => {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          return { method: 'POST', url: `/playlists/${playlistId}/images/main`, body: formData };
+        },
+        invalidatesTags: ['Playlists'],
+      }),
     };
   },
 });
@@ -35,4 +45,5 @@ export const {
   useCreatePlaylistMutation,
   useDeletePlaylistMutation,
   useUpdatePlaylistMutation,
+  useUploadPlaylistCoverMutation,
 } = playlistsApi;

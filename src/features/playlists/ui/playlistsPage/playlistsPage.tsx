@@ -14,7 +14,7 @@ export const PlaylistsPage = () => {
 
   const { data } = useFetchPlaylistsQuery();
 
-  const editPlaylistHandler = (playlist: PlaylistData | null) => {
+  function editPlaylistHandler(playlist: PlaylistData | null) {
     if (playlist) {
       setPlaylistId(playlist.id);
       reset({
@@ -25,7 +25,7 @@ export const PlaylistsPage = () => {
     } else {
       setPlaylistId(null);
     }
-  };
+  }
 
   return (
     <div className={s.container}>
