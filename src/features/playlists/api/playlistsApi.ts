@@ -16,7 +16,10 @@ export const playlistsApi = baseApi.injectEndpoints({
         providesTags: ['Playlists'],
       }),
       createPlaylist: build.mutation<{ data: PlaylistData }, CreatePlaylistArgs>({
-        query: (body) => ({ method: 'POST', url: '/playlists', body }),
+        query: (body) => {
+          body.data.type = 'playlists';
+          return { method: 'POST', url: '/playlists', body };
+        },
         invalidatesTags: ['Playlists'],
       }),
       deletePlaylist: build.mutation<void, { playlistId: string }>({
@@ -24,7 +27,10 @@ export const playlistsApi = baseApi.injectEndpoints({
         invalidatesTags: ['Playlists'],
       }),
       updatePlaylist: build.mutation<void, { playlistId: string; body: UpdatePlaylistArgs }>({
-        query: ({ playlistId, body }) => ({ method: 'PUT', url: `/playlists/${playlistId}`, body }),
+        query: ({ playlistId, body }) => {
+          body.data.type = 'playlists';
+          return { method: 'PUT', url: `/playlists/${playlistId}`, body };
+        },
         invalidatesTags: ['Playlists'],
       }),
       uploadPlaylistCover: build.mutation<Images, { playlistId: string; file: File }>({

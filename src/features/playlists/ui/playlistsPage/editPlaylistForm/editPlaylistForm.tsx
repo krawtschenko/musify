@@ -20,6 +20,7 @@ export const EditPlaylistForm = ({
 
   function onSubmit(data: UpdatePlaylistArgs) {
     if (!playlistId) return;
+
     updatePlaylist({ playlistId, body: data }).then(() => {
       setPlaylistId(null);
     });
@@ -29,10 +30,10 @@ export const EditPlaylistForm = ({
     <form onSubmit={handleSubmit(onSubmit)}>
       <h2>Edit playlist</h2>
       <div>
-        <input {...register('title')} placeholder={'title'} />
+        <input {...register('data.attributes.title')} placeholder={'title'} />
       </div>
       <div>
-        <input {...register('description')} placeholder={'description'} />
+        <input {...register('data.attributes.description')} placeholder={'description'} />
       </div>
       <button type={'submit'}>save</button>
       <button type={'button'} onClick={() => editPlaylist(null)}>

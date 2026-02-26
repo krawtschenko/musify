@@ -17,10 +17,10 @@ export const CreatePlaylistForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <h2>Create new playlist</h2>
       <div>
-        <input {...register('title')} placeholder={'title'} />
+        <input {...register('data.attributes.title')} placeholder={'title'} />
       </div>
       <div>
-        <input {...register('description')} placeholder={'description'} />
+        <input {...register('data.attributes.description')} placeholder={'description'} />
       </div>
       <button>create playlist</button>
     </form>

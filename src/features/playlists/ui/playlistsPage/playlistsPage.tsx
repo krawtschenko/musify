@@ -18,9 +18,14 @@ export const PlaylistsPage = () => {
     if (playlist) {
       setPlaylistId(playlist.id);
       reset({
-        title: playlist.attributes.title,
-        description: playlist.attributes.description,
-        tagIds: playlist.attributes.tags.map((t) => t.id),
+        data: {
+          type: 'playlist',
+          attributes: {
+            title: playlist.attributes.title,
+            description: playlist.attributes.description,
+            tagIds: playlist.attributes.tags.map((t) => t.id),
+          },
+        },
       });
     } else {
       setPlaylistId(null);

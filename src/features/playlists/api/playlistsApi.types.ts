@@ -46,12 +46,22 @@ export type FetchPlaylistsArgs = {
 };
 
 export type CreatePlaylistArgs = {
-  title: string;
-  description: string;
+  data: {
+    type: string;
+    attributes: {
+      title: string;
+      description: string;
+    };
+  };
 };
 
 export type UpdatePlaylistArgs = {
-  title: string;
-  description: string;
-  tagIds: string[];
+  data: {
+    type: string;
+    attributes: {
+      title: string;
+      description: string;
+      tagIds: string[];
+    };
+  };
 };
