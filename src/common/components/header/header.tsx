@@ -18,9 +18,7 @@ export const Header = () => {
             <li key={item.to}>
               <NavLink
                 to={item.to}
-                className={({ isActive }) =>
-                  `link ${isActive ? s.activeLink : ''}`
-                }>
+                className={({ isActive }) => `link ${isActive ? s.activeLink : ''}`}>
                 {item.label}
               </NavLink>
             </li>

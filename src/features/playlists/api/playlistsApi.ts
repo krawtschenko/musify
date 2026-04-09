@@ -11,8 +11,8 @@ import type { Images } from '@/common/types';
 export const playlistsApi = baseApi.injectEndpoints({
   endpoints: (build) => {
     return {
-      fetchPlaylists: build.query<PlaylistsResponse, FetchPlaylistsArgs | void>({
-        query: () => '/playlists',
+      fetchPlaylists: build.query<PlaylistsResponse, FetchPlaylistsArgs>({
+        query: (params) => ({ url: '/playlists', params }),
         providesTags: ['Playlists'],
       }),
       createPlaylist: build.mutation<{ data: PlaylistData }, CreatePlaylistArgs>({

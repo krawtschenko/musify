@@ -1,18 +1,21 @@
 import s from './playlistsPage.module.scss';
 import { CreatePlaylistForm } from './createPlaylistForm';
+import type { PlaylistData, UpdatePlaylistArgs } from '@/features/playlists/api';
 import { useFetchPlaylistsQuery } from '@/features/playlists/api';
 import { useForm } from 'react-hook-form';
-import type { PlaylistData, UpdatePlaylistArgs } from '@/features/playlists/api';
 import { useState } from 'react';
 import { PlaylistItem } from '@/features/playlists/ui/playlistsPage/playlistItem';
 import { EditPlaylistForm } from '@/features/playlists/ui/playlistsPage/editPlaylistForm';
+import { useDebounceValue } from '@/common/hooks';
 
 export const PlaylistsPage = () => {
   const { register, handleSubmit, reset } = useForm<UpdatePlaylistArgs>();
 
   const [playlistId, setPlaylistId] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
 
-  const { data } = useFetchPlaylistsQuery();
+  const debounceSearch = useDebounceValue(search);
+  const { data, isLoading } = useFetchPlaylistsQuery({ search: debounceSearch });
 
   function editPlaylistHandler(playlist: PlaylistData | null) {
     if (playlist) {
@@ -37,8 +40,14 @@ export const PlaylistsPage = () => {
       <h1>Playlists page</h1>
 
       <CreatePlaylistForm />
+      <input
+        type="search"
+        placeholder={'Search playlist by title'}
+        onChange={(e) => setSearch(e.currentTarget.value)}
+      />
 
       <div className={s.items}>
+        {!data?.data.length && !isLoading && <h2>Playlists not found</h2>}
         {data?.data.map((playlist) => {
           const isEditing = playlist.id === playlistId;
 
