@@ -7,15 +7,22 @@ import { useState } from 'react';
 import { PlaylistItem } from '@/features/playlists/ui/playlistsPage/playlistItem';
 import { EditPlaylistForm } from '@/features/playlists/ui/playlistsPage/editPlaylistForm';
 import { useDebounceValue } from '@/common/hooks';
+import { Pagination } from '@/common/components/pagination';
 
 export const PlaylistsPage = () => {
   const { register, handleSubmit, reset } = useForm<UpdatePlaylistArgs>();
 
   const [playlistId, setPlaylistId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize, setPageSize] = useState(2);
 
   const debounceSearch = useDebounceValue(search);
-  const { data, isLoading } = useFetchPlaylistsQuery({ search: debounceSearch });
+  const { data, isLoading } = useFetchPlaylistsQuery({
+    search: debounceSearch,
+    pageNumber,
+    pageSize,
+  });
 
   function editPlaylistHandler(playlist: PlaylistData | null) {
     if (playlist) {
@@ -33,6 +40,11 @@ export const PlaylistsPage = () => {
     } else {
       setPlaylistId(null);
     }
+  }
+
+  function changePageSizeHandler(pageSize: number) {
+    setPageNumber(1);
+    setPageSize(pageSize);
   }
 
   return (
@@ -68,6 +80,13 @@ export const PlaylistsPage = () => {
           );
         })}
       </div>
+      <Pagination
+        currentPage={pageNumber}
+        setCurrentPage={setPageNumber}
+        pagesCount={data?.meta.pagesCount || 1}
+        pageSize={pageSize}
+        changePageSize={changePageSizeHandler}
+      />
     </div>
   );
 };
