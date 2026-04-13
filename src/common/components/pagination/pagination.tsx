@@ -1,5 +1,6 @@
 import { getPaginationPages } from '@/common/utils/getPaginationPages';
 import s from './pagination.module.scss';
+import { PageSizeSelector } from '@/common/components/pagination/pageSizeSelector/pageSizeSelector';
 
 type Props = {
   currentPage: number;
@@ -42,18 +43,7 @@ export const Pagination = ({
           ),
         )}
       </div>
-
-      <label>
-        Show
-        <select value={pageSize} onChange={(e) => changePageSize(Number(e.target.value))}>
-          {[2, 4, 8, 16, 32].map((size) => (
-            <option value={size} key={size}>
-              {size}
-            </option>
-          ))}
-        </select>
-        per page
-      </label>
+      <PageSizeSelector pageSize={pageSize} changePageSize={changePageSize} />
     </div>
   );
 };
