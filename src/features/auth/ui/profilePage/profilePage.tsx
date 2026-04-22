@@ -1,7 +1,11 @@
+import { useGetMeQuery } from '@/features/auth/api/authApi.ts';
+
 export const ProfilePage = () => {
-	return (
-		<div>
-			<h1>Profile page</h1>
-		</div>
-	)
-}
+  const { data } = useGetMeQuery();
+
+  return (
+    <div>
+      <h1>{data?.login}</h1>
+    </div>
+  );
+};
