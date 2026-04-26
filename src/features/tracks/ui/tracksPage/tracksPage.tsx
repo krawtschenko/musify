@@ -1,23 +1,49 @@
 import { useFetchTracksInfiniteQuery } from '@/features/tracks/api/tracksApi.ts';
 import s from './tracksPage.module.scss';
+import { useCallback, useEffect, useRef } from 'react';
 
 export const TracksPage = () => {
-  const { data, hasNextPage, isLoading, isFetching, isFetchingNextPage, fetchNextPage } =
+  const { data, hasNextPage, isFetching, isFetchingNextPage, fetchNextPage } =
     useFetchTracksInfiniteQuery();
 
-  const page = data?.pages.flatMap((page) => page.data);
+  const observerRef = useRef<HTMLDivElement>(null);
 
-  function loadMoreHandler() {
+  const pages = data?.pages.flatMap((page) => page.data) || [];
+
+  const loadMoreHandler = useCallback(() => {
     if (hasNextPage && !isFetching) {
       fetchNextPage();
     }
-  }
+  }, [hasNextPage, isFetching, fetchNextPage]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.length > 0 && entries[0].isIntersecting) {
+          loadMoreHandler();
+        }
+      },
+      { root: null, rootMargin: '100px', threshold: 0.1 },
+    );
+
+    const currentObserverRef = observerRef.current;
+
+    if (currentObserverRef) {
+      observer.observe(currentObserverRef);
+    }
+
+    return () => {
+      if (currentObserverRef) {
+        observer.unobserve(currentObserverRef);
+      }
+    };
+  }, [loadMoreHandler]);
 
   return (
     <div>
       <h1>Tracks page</h1>
       <div className={s.list}>
-        {page?.map((track) => {
+        {pages.map((track) => {
           const { title, user, attachments } = track.attributes;
 
           return (
@@ -31,17 +57,14 @@ export const TracksPage = () => {
           );
         })}
       </div>
-      {!isLoading && (
-        <>
-          {hasNextPage ? (
-            <button onClick={loadMoreHandler} disabled={isFetching}>
-              {isFetchingNextPage ? 'Loading...' : 'Load More'}
-            </button>
-          ) : (
-            <p>Nothing more to load</p>
-          )}
-        </>
+
+      {hasNextPage && (
+        <div ref={observerRef}>
+          {isFetchingNextPage ? <div>Load more...</div> : <div style={{ height: '10px' }}></div>}
+        </div>
       )}
+
+      {!hasNextPage && pages.length > 0 && <p>Nothing more to load</p>}
     </div>
   );
 };
