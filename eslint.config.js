@@ -20,6 +20,7 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
+      'no-debugger': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
     },

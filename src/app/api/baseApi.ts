@@ -1,3 +1,4 @@
+import { handleErrors } from '@/common/utils';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const baseApi = createApi({
@@ -5,9 +6,7 @@ export const baseApi = createApi({
   tagTypes: ['Playlists'],
   keepUnusedDataFor: 60,
   baseQuery: async (args, api, extraOptions) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    return fetchBaseQuery({
+    const result = await fetchBaseQuery({
       baseUrl: import.meta.env.VITE_BASE_URL,
       headers: {
         'API-KEY': import.meta.env.VITE_API_KEY,
@@ -17,6 +16,12 @@ export const baseApi = createApi({
         return headers;
       },
     })(args, api, extraOptions);
+
+    if (result.error) {
+      handleErrors(result.error);
+    }
+
+    return result;
   },
   endpoints: () => ({}),
 });
