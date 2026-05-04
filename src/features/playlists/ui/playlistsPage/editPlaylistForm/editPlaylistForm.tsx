@@ -18,12 +18,11 @@ export const EditPlaylistForm = ({
 }: Props) => {
   const [updatePlaylist] = useUpdatePlaylistMutation();
 
-  function onSubmit(data: UpdatePlaylistArgs) {
+  function onSubmit(body: UpdatePlaylistArgs) {
     if (!playlistId) return;
 
-    updatePlaylist({ playlistId, body: data }).then(() => {
-      setPlaylistId(null);
-    });
+    updatePlaylist({ playlistId, body });
+    setPlaylistId(null);
   }
 
   return (
