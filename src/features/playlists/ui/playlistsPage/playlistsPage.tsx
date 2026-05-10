@@ -4,7 +4,7 @@ import { useFetchPlaylistsQuery } from '@/features/playlists/api';
 import { useState, type ChangeEvent } from 'react';
 import { useDebounceValue } from '@/common/hooks';
 import { Pagination } from '@/common/components/pagination';
-import { PlaylistsList } from '@/features/playlists/ui/playlistsPage/playlistsList';
+import { PlaylistsList } from './playlistsList';
 
 export const PlaylistsPage = () => {
   const [search, setSearch] = useState('');
@@ -12,7 +12,7 @@ export const PlaylistsPage = () => {
   const [pageSize, setPageSize] = useState(8);
 
   const debounceSearch = useDebounceValue(search);
-  const { data, isLoading, error } = useFetchPlaylistsQuery({
+  const { data, isLoading } = useFetchPlaylistsQuery({
     search: debounceSearch,
     pageNumber,
     pageSize,

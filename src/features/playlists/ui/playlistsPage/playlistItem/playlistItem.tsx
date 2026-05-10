@@ -1,6 +1,6 @@
 import { type PlaylistData, useDeletePlaylistMutation } from '@/features/playlists/api';
-import { PlaylistCover } from '@/features/playlists/ui/playlistsPage/playlistItem/playlistCover';
-import { PlaylistDescription } from '@/features/playlists/ui/playlistsPage/playlistItem/playlistDescription';
+import { PlaylistCover } from './playlistCover';
+import { PlaylistDescription } from './playlistDescription';
 
 type Props = {
   playlist: PlaylistData;

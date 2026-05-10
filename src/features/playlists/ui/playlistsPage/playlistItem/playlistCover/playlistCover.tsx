@@ -6,7 +6,6 @@ import {
 import defaultCover from '@/assets/images/default-playlist-cover.png';
 import type { Images } from '@/common/types';
 import s from './playlistCover.module.scss';
-import { toast } from 'react-toastify';
 import { errorToast } from '@/common/utils';
 
 type Props = {

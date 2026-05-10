@@ -1,8 +1,8 @@
 import type { PlaylistData, UpdatePlaylistArgs } from '@/features/playlists/api';
 import s from './playlistsList.module.scss';
 import { useState } from 'react';
-import { EditPlaylistForm } from '@/features/playlists/ui/playlistsPage/editPlaylistForm';
-import { PlaylistItem } from '@/features/playlists/ui/playlistsPage/playlistItem';
+import { EditPlaylistForm } from '../editPlaylistForm';
+import { PlaylistItem } from '../playlistItem';
 import { useForm } from 'react-hook-form';
 
 type Props = {
