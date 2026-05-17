@@ -7,4 +7,5 @@ export const baseApi = createApi({
   keepUnusedDataFor: 60,
   baseQuery: baseQueryWithReauth,
   endpoints: () => ({}),
+  // skipSchemaValidation: import.meta.env.PROD,
 });

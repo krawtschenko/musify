@@ -6,3 +6,4 @@ export { errorToast } from './errorToast';
 export { successToast } from './successToast';
 export { handleErrors } from './handleErrors';
 export { isTokens } from './isTokens';
+export { withZodCatch } from './withZodCatch';

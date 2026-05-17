@@ -1,5 +1,4 @@
 import s from './playlistsPage.module.scss';
-import { CreatePlaylistForm } from './createPlaylistForm';
 import { useFetchPlaylistsQuery } from '@/features/playlists/api';
 import { useState, type ChangeEvent } from 'react';
 import { useDebounceValue } from '@/common/hooks';
@@ -36,7 +35,6 @@ export const PlaylistsPage = () => {
     <div className={s.container}>
       <h1>Playlists page</h1>
 
-      <CreatePlaylistForm />
       <input
         type="search"
         placeholder={'Search playlist by title'}
