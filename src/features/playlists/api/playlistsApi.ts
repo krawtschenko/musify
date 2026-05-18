@@ -1,6 +1,8 @@
 import type {
   CreatePlaylistArgs,
   FetchPlaylistsArgs,
+  PlaylistCreatedEvent,
+  PlaylistUpdatedEvent,
   UpdatePlaylistArgs,
 } from './playlistsApi.types.ts';
 import { baseApi } from '@/app/api/baseApi.ts';
@@ -10,12 +12,44 @@ import {
 } from '../model/playlists.schemas.ts';
 import { imagesSchema } from '@/common/schemas';
 import { withZodCatch } from '@/common/utils';
+import { SOCKET_EVENTS } from '@/common/constants';
+import { subscribeToEvent } from '@/common/socket/subscribeToEvent';
 
 export const playlistsApi = baseApi.injectEndpoints({
   endpoints: (build) => {
     return {
       fetchPlaylists: build.query({
         query: (params: FetchPlaylistsArgs) => ({ url: '/playlists', params }),
+        keepUnusedDataFor: 0, // 👈 очистка сразу после размонтирования
+        async onCacheEntryAdded(_arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
+          // Ждем разрешения начального запроса перед продолжением
+          await cacheDataLoaded;
+
+          const unsubscribes = [
+            subscribeToEvent<PlaylistCreatedEvent>(SOCKET_EVENTS.PLAYLIST_CREATED, (msg) => {
+              const newPlaylist = msg.payload.data;
+              updateCachedData((state) => {
+                state.data.pop();
+                state.data.unshift(newPlaylist);
+                state.meta.totalCount = state.meta.totalCount + 1;
+                state.meta.pagesCount = Math.ceil(state.meta.totalCount / state.meta.pageSize);
+              });
+            }),
+            subscribeToEvent<PlaylistUpdatedEvent>(SOCKET_EVENTS.PLAYLIST_UPDATED, (msg) => {
+              const newPlaylist = msg.payload.data;
+              updateCachedData((state) => {
+                const index = state.data.findIndex((playlist) => playlist.id === newPlaylist.id);
+                if (index !== -1) {
+                  state.data[index] = { ...state.data[index], ...newPlaylist };
+                }
+              });
+            }),
+          ];
+
+          // CacheEntryRemoved разрешится, когда подписка на кеш больше не активна
+          await cacheEntryRemoved;
+          unsubscribes.forEach((unsubscribe) => unsubscribe());
+        },
         providesTags: ['Playlists'],
         ...withZodCatch(playlistsResponseSchema),
       }),
